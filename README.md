@@ -112,6 +112,3 @@ Here, issues with On-chain blockchain can be solved by using off-chain blockchai
 1. Name: TEJAL TAYADE
 2. Name: RUPIKA PATIL
 3. Name:ESHA NALAWADE
-
-4. Name: Kabir Bhakta
-Student Id: 7900098
