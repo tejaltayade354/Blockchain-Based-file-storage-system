@@ -1,7 +1,5 @@
 <h1>Blockchain-based-File-Storage</h1>
 
-
-
 <h2>How to run the application</h2>
 
 1. Install required libraries using :
@@ -10,8 +8,11 @@
    `python peer.py`
 3. Open another terminal and start a client:
    `python run_app.py`
-4. Copy the link from the client terminal and paste it in any browser.
-5. To run our experiment of different Proof of Work concepts:
+4. Open `http://localhost:9000/` in your browser.
+5. Use the upload form to choose any file type, then submit it.
+6. Visit `/mine` to add the pending file transaction into a new block.
+7. Visit `/files` to see stored files and download them from mined blocks.
+8. To run our experiment of different Proof of Work concepts:
 `python POW_Comparison.py`
 <h2> Project Information </h2>
 We developed a web-based application for decentralized file storing using blockchain. In this application any user can upload as many files(one at a time) as he/she likes. All other peers and the user himself can download and access those file in their system. File can be of any type and any size. Refer to project demo link to see the detailed explanation. <br />
@@ -45,20 +46,20 @@ Based on this idea, we have implemented two algorithms. Both calculate nonce dif
 The running time for first algorithm:
 
 |               | Attempt #1 | Attempt #2 | Attempt #3 | Attempt #4 |
-|---------------|------------|------------|------------|------------|
-| Difficulty #2 | 0.00018    | 0.00281    | 0.00102    | 0.00039    |            
-| Difficulty #3 | 0.00069    | 0.03207    | 0.00485    | 0.00356    |            
-| Difficulty #4 | 0.13479    | 0.22688    | 0.34565    | 0.19841    |            
-| Difficulty #5 | 4.06034    | 2.08288    | 0.58391    | 0.2094     |            
+| ------------- | ---------- | ---------- | ---------- | ---------- |
+| Difficulty #2 | 0.00018    | 0.00281    | 0.00102    | 0.00039    |
+| Difficulty #3 | 0.00069    | 0.03207    | 0.00485    | 0.00356    |
+| Difficulty #4 | 0.13479    | 0.22688    | 0.34565    | 0.19841    |
+| Difficulty #5 | 4.06034    | 2.08288    | 0.58391    | 0.2094     |
 
 The running time of Second algorithm:
 
 |               | Attempt #1 | Attempt #2 | Attempt #3 | Attempt #4 |
-|---------------|------------|------------|------------|------------|
-| Difficulty #2 | 0.00035    | 0.00080    | 0.00062    | 0.00108    |            
-| Difficulty #3 | 0.02190    | 0.02463    | 0.02104    | 0.01625    |            
-| Difficulty #4 | 0.00366    | 0.03813    | 0.32095    | 0.02145    |            
-| Difficulty #5 | 0.04403    | 3.10820    | 1.53688    | 1.50288    |            
+| ------------- | ---------- | ---------- | ---------- | ---------- |
+| Difficulty #2 | 0.00035    | 0.00080    | 0.00062    | 0.00108    |
+| Difficulty #3 | 0.02190    | 0.02463    | 0.02104    | 0.01625    |
+| Difficulty #4 | 0.00366    | 0.03813    | 0.32095    | 0.02145    |
+| Difficulty #5 | 0.04403    | 3.10820    | 1.53688    | 1.50288    |
 
 <h3>Why First Algorithm is better than Second one?</h3>
 
@@ -88,7 +89,7 @@ Overall, any proof of work algorithm is computationally expensive and requires t
 
 <h2>Comparison for On-chain and Off-Chain Blockchain:</h2>
 
-Blockchain applications can also be divided into two types: On-chain Blockchain & Off-chain Blockchain. On-chain Blockchain refers to storing information inside blocks and Off-chain Blockchain refers to storing actual data outside the block and only keep metadata in block. 
+Blockchain applications can also be divided into two types: On-chain Blockchain & Off-chain Blockchain. On-chain Blockchain refers to storing information inside blocks and Off-chain Blockchain refers to storing actual data outside the block and only keep metadata in block.
 
 <h3>Advantages of On-chain blockchain: </h3>
 

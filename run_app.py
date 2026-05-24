@@ -1,3 +1,4 @@
-from app import app
+from peer import app
 
-app.run(host = 'localhost', port = '9000',debug=True)
+if __name__ == "__main__":
+    app.run(host='localhost', port=9000, debug=True)

@@ -1,8 +1,9 @@
 #import libraries
+import base64
 import json
 from Blockchain import Blockchain
 from Block import Block
-from flask import Flask, request
+from flask import Flask, request, Response
 
 #app object
 app = Flask(__name__)
@@ -35,8 +36,76 @@ def get_chain():
     #print chain len
     print("Chain Len: {0}".format(len(chain)))
     return json.dumps({"length" : len(chain), "chain" : chain})
-        
 
+@app.route("/", methods=["GET"])
+def index():
+    html = """
+    <h1>Blockchain File Storage Node</h1>
+    <p>Use the form below to upload a file to the blockchain pending pool.</p>
+    <p><a href='/chain'>View chain</a> | <a href='/pending_tx'>Pending transactions</a> | <a href='/files'>View stored files</a></p>
+    <form action='/upload' method='post' enctype='multipart/form-data'>
+      <label>User name: <input type='text' name='user' value='anonymous'></label><br><br>
+      <label>File: <input type='file' name='file'></label><br><br>
+      <button type='submit'>Upload File</button>
+    </form>
+    """
+    return html
+
+@app.route("/upload", methods=["POST"])
+def upload_file():
+    user = request.form.get("user", "anonymous")
+    file = request.files.get("file")
+    if not file or file.filename == "":
+        return "No file uploaded.", 400
+
+    file_bytes = file.read()
+    file_base64 = base64.b64encode(file_bytes).decode("utf-8")
+    transaction = {
+        "user": user,
+        "v_file": file.filename,
+        "file_data": file_base64,
+        "file_size": len(file_bytes)
+    }
+    blockchain.add_pending(transaction)
+    return "Upload successful. File transaction added to pending pool.", 201
+
+@app.route("/download/<int:block_index>/<filename>", methods=["GET"])
+def download_file(block_index, filename):
+    if block_index < 0 or block_index >= len(blockchain.chain):
+        return "Block not found.", 404
+
+    block = blockchain.chain[block_index]
+    for tx in block.transactions:
+        if tx.get("v_file") == filename:
+            file_data = base64.b64decode(tx.get("file_data", ""))
+            return Response(
+                file_data,
+                mimetype="application/octet-stream",
+                headers={"Content-Disposition": f"attachment; filename={filename}"}
+            )
+    return "File not found in block.", 404
+
+@app.route("/files", methods=["GET"])
+def list_files():
+    html = """
+    <h1>Files Stored on Blockchain</h1>
+    <p><a href='/'>Home</a> | <a href='/chain'>View chain</a> | <a href='/pending_tx'>Pending transactions</a></p>
+    """
+    if len(blockchain.chain) <= 1:
+        html += "<p>No mined blocks yet. Upload a file and then mine to store it.</p>"
+    else:
+        for block in blockchain.chain[1:]:
+            html += f"<h2>Block {block.index}</h2>"
+            html += f"<p>Previous hash: {block.prev_hash}</p>"
+            html += "<ul>"
+            for tx in block.transactions:
+                filename = tx.get('v_file', 'unnamed')
+                user = tx.get('user', 'unknown')
+                size = tx.get('file_size', 0)
+                html += f"<li>{filename} ({size} bytes) by {user} - <a href='/download/{block.index}/{filename}'>Download</a></li>"
+            html += "</ul>"
+    return html
+        
 @app.route("/mine", methods=["GET"])
 #Mines pending tx blocks and call mine method in blockchain
 def mine_uncofirmed_transactions():
@@ -69,4 +138,5 @@ def validate_and_add_block():
         return "The Block was discarded by the node.", 400
     return "The block was added to the chain.", 201
 #run the app
-app.run(port=8800, debug=True)
+if __name__ == "__main__":
+    app.run(port=8800, debug=True)
